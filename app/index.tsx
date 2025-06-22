@@ -1,44 +1,57 @@
 // app/index.tsx
-import React, {useRef} from 'react';
-import { View, Text, StyleSheet, Image, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
+import React from 'react';
+import { View, Text, StyleSheet, Image, SafeAreaView, ActivityIndicator } from 'react-native';
+import { useRouter, Redirect } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
 import AnimatedButton from '@/components/core/AnimatedButton';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Colors } from '@/constants/Colors';
 import LottieView from 'lottie-react-native';
 
-export default function WelcomeScreen() {
-  const router = useRouter();
+export default function WelcomeOrRedirect() {
 
-  const animation = useRef<LottieView>(null);
+  // Jika tidak ada sesi, tampilkan halaman onboarding
+  return <OnboardingScreen />;
+}
 
-  return (
-    <LinearGradient
-      colors={['#4A90E2', '#50E3C2']}
-      style={styles.container}
-    >
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.content}>
-          <LottieView ref={animation} source={require('../assets/animations/welcome.json')} autoPlay loop style={styles.illustration} />
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>Finance App</Text>
-            <Text style={styles.subtitle}>
-              Carrying out financial transactions with the best security.
-            </Text>
-          </View>
-        </View>
-        <View style={styles.footer}>
-          <AnimatedButton onPress={() => router.push('/login')}>
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Get started</Text>
-            </View>
-          </AnimatedButton>
-        </View>
-      </SafeAreaView>
-    </LinearGradient>
-  );
+const OnboardingScreen = () => {
+    const router = useRouter();
+
+    const animation = React.useRef<LottieView>(null);
+
+    return (
+        <LinearGradient
+            colors={['#50E3C2', '#4A90E2']}
+            style={styles.container}
+        >
+            <SafeAreaView style={styles.safeArea}>
+                <View style={styles.content}>
+                    <LottieView ref={animation} source={require('@/assets/animations/welcome.json')} autoPlay loop style={styles.illustration} />
+                    <View style={styles.textContainer}>
+                        <Text style={styles.title}>Finance App</Text>
+                        <Text style={styles.subtitle}>
+                        Carrying out financial transactions with the best security.
+                        </Text>
+                    </View>
+                </View>
+                <View style={styles.footer}>
+                    <AnimatedButton onPress={() => router.push('/login')}>
+                        <View style={styles.button}>
+                        <Text style={styles.buttonText}>Get started</Text>
+                        </View>
+                    </AnimatedButton>
+                </View>
+            </SafeAreaView>
+        </LinearGradient>
+    );
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
   },
@@ -69,9 +82,10 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
     lineHeight: 25,
+    paddingHorizontal: 20,
   },
   footer: {
     padding: 20,

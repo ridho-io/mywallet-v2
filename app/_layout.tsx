@@ -13,12 +13,12 @@ const InitialLayout = () => {
   useEffect(() => {
     if (loading) return;
 
-    const inAuthGroup = segments[0] === '(main)';
+    const inAuthGroup = segments[0] === '(main)' || segments[0] === '(tabs)';
 
     if (session && !inAuthGroup) {
       // Pengguna sudah login dan tidak berada di grup tab, arahkan ke home
-      router.replace('/(main)/(tabs)/home');
-    } else if (!session) {
+      router.replace('/home');
+    } else if (!session && inAuthGroup) {
       // Pengguna belum login, arahkan ke halaman pembuka/awal
       router.replace('/');
     }
